@@ -3,7 +3,7 @@ uvicorn[standard]
 sqlalchemy
 psycopg2-binary
 redis
-kafka-python
+aiokafka
 websockets
 pydantic
 python-multipart
