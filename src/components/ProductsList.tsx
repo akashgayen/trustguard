@@ -22,7 +22,7 @@ const ProductsList: React.FC = () => {
   const products: Product[] = [
     {
       id: 1,
-      title: "Zebronics Zeb-Storm Wired Headphone with 3.5mm Jack, Built in Microphone for Calling, 1.5 Meter Cable, Soft Ear Cushion",
+      title: "Premium Wireless Bluetooth Headphones - Noise Cancelling Over-Ear Headphones with Deep Bass",
       price: "₹449",
       originalPrice: "₹799",
       discount: "44% off",
@@ -36,7 +36,7 @@ const ProductsList: React.FC = () => {
     },
     {
       id: 2,
-      title: "pTron Tangentbeat in Ear Bluetooth 5.0 Wireless Headphones with Mic, Deep Bass, 10mm Drivers, Clear Calls, Dual Pairing, Fast Charging",
+      title: "Premium Wireless Bluetooth Headphones - Noise Cancelling Over-Ear Headphones with Deep Bass",
       price: "₹549",
       originalPrice: "₹2,999",
       discount: "78% off",
@@ -50,7 +50,7 @@ const ProductsList: React.FC = () => {
     },
     {
       id: 3,
-      title: "Sony WH-CH720N Wireless Noise Canceling Headphones with Microphone, Dual Noise Sensor Technology, 35 Hour Battery Life",
+      title: "Premium Wireless Bluetooth Headphones - Noise Cancelling Over-Ear Headphones with Deep Bass",
       price: "₹7,999",
       originalPrice: "₹14,990",
       discount: "47% off",

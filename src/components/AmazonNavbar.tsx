@@ -7,20 +7,18 @@ interface NavLink {
 }
 
 const navLinks: NavLink[] = [
-  { label: 'Fresh', href: '/productlist' },
+  { label: '🛡️ TrustGuardAssured', href: '/productlist' },
   { label: 'Mobiles', href: '#' },
   { label: 'MX Player', href: '#' },
   { label: 'Sell', href: '#' },
   { label: 'Amazon Pay', href: '#' },
-  { label: 'Buy Again', href: '#' },
   { label: 'Gift Cards', href: '#' },
   { label: 'AmazonBasics', href: '#' },
   { label: 'Kindle eBooks', href: '#' },
   { label: 'Books', href: '#' },
-  { label: 'Health, Household & Personal Care', href: '#' },
   { label: 'Home Improvement', href: '#' },
   { label: 'Gift Ideas', href: '#' },
-  { label: 'Browsing History', href: '#' },
+  { label: 'Health, Household & Personal Care', href: '#' },
 ];
 
 interface AmazonSidebarProps {
@@ -151,8 +149,7 @@ const AmazonSidebar: React.FC<AmazonSidebarProps> = ({ isOpen, onClose }) => {
 };
 
 
-const AmazonNavbar
-: React.FC = () => {
+const AmazonNavbar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
   const toggleSidebar = () => {
@@ -160,14 +157,14 @@ const AmazonNavbar
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 font-inter antialiased">
+    <> {/* Changed div to a Fragment */}
       {/* Header */}
       <header className="bg-gray-800 text-gray-100 p-2 flex items-center flex-wrap justify-between md:flex-nowrap">
         {/* Amazon Logo and Delivery */}
         <div className="flex items-center flex-shrink-0 mb-2 md:mb-0">
           <a href="#" className="flex items-center mr-4">
             <img
-              src="https://placehold.co/100x30/374151/FFFFFF?text=amazon.in" // Placeholder for Amazon logo
+              src="https://www.amazon.in/ref=nav_logo" // Placeholder for Amazon logo
               alt="Amazon India"
               className="h-6 md:h-7 rounded-sm"
               onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -177,7 +174,7 @@ const AmazonNavbar
             />
           </a>
           <div className="hidden md:flex flex-col text-xs cursor-pointer hover:border hover:border-gray-600 rounded-sm p-1">
-            <span className="text-gray-400">Deliver to Pinki</span>
+            <span className="text-gray-400">Deliver to SuperSurge</span>
             <span className="font-bold">
               <MapPin size={14} className="inline-block mr-1" />
               Kolkata 700012
@@ -287,11 +284,8 @@ const AmazonNavbar
 
       {/* Amazon Sidebar Component */}
       <AmazonSidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
-
-      
-    </div>
+    </>
   );
 }
 
-export default AmazonNavbar
-;
+export default AmazonNavbar;
