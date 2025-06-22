@@ -32,7 +32,8 @@ export const mockProduct: Product = {
   }
 };
 
-export const mockReviews: Review[] = [
+// Base review data without authenticity scores - these will be calculated dynamically
+export const mockReviewsBase: Omit<Review, 'authenticityScore' | 'isFake' | 'fakeReasons'>[] = [
   {
     id: 'review_001',
     productId: 'prod_001',
@@ -45,9 +46,6 @@ export const mockReviews: Review[] = [
     date: '2024-01-15T10:30:00Z',
     verified: true,
     helpful: 47,
-    authenticityScore: 92,
-    isFake: false,
-    fakeReasons: [],
     location: 'New York, NY'
   },
   {
@@ -62,9 +60,6 @@ export const mockReviews: Review[] = [
     date: '2024-01-12T14:22:00Z',
     verified: true,
     helpful: 23,
-    authenticityScore: 88,
-    isFake: false,
-    fakeReasons: [],
     location: 'Los Angeles, CA'
   },
   {
@@ -79,15 +74,6 @@ export const mockReviews: Review[] = [
     date: '2024-01-14T09:15:00Z',
     verified: false,
     helpful: 3,
-    authenticityScore: 23,
-    isFake: true,
-    fakeReasons: [
-      'Excessive use of superlatives',
-      'Generic username pattern',
-      'No verified purchase',
-      'Extremely short typing duration',
-      'Multiple similar reviews from same IP range'
-    ],
     location: 'Unknown'
   },
   {
@@ -102,9 +88,6 @@ export const mockReviews: Review[] = [
     date: '2024-01-10T16:45:00Z',
     verified: true,
     helpful: 15,
-    authenticityScore: 85,
-    isFake: false,
-    fakeReasons: [],
     location: 'Chicago, IL'
   },
   {
@@ -119,9 +102,6 @@ export const mockReviews: Review[] = [
     date: '2024-01-08T11:20:00Z',
     verified: true,
     helpful: 34,
-    authenticityScore: 94,
-    isFake: false,
-    fakeReasons: [],
     location: 'Austin, TX'
   },
   {
@@ -136,18 +116,198 @@ export const mockReviews: Review[] = [
     date: '2024-01-13T08:30:00Z',
     verified: false,
     helpful: 1,
-    authenticityScore: 31,
-    isFake: true,
-    fakeReasons: [
-      'Run-on sentence structure',
-      'No punctuation usage',
-      'Generic review pattern',
-      'Posted within 24h of account creation',
-      'Similar content to other flagged reviews'
-    ],
     location: 'Unknown'
   }
 ];
+
+// Function to analyze review authenticity using ML service
+export const analyzeReviewAuthenticity = async (review: Omit<Review, 'authenticityScore' | 'isFake' | 'fakeReasons'>): Promise<{
+  authenticityScore: number;
+  isFake: boolean;
+  fakeReasons: string[];
+}> => {
+  try {
+    // Calculate account age based on review patterns
+    const getAccountAge = (userName: string, date: string): number => {
+      const reviewDate = new Date(date);
+      const now = new Date();
+      const daysSinceReview = Math.floor((now.getTime() - reviewDate.getTime()) / (1000 * 60 * 60 * 24));
+      
+      // Simulate account age based on username patterns and review date
+      if (userName.includes('_') && userName.includes('2024')) return Math.max(5, daysSinceReview + 5);
+      if (userName.toLowerCase().includes('master') || userName.toLowerCase().includes('99')) return Math.max(1, daysSinceReview + 1);
+      return Math.max(30, daysSinceReview + Math.floor(Math.random() * 365) + 30);
+    };
+
+    // Simulate typing behavior based on content characteristics
+    const getTypingMetrics = (content: string, headline: string): {
+      typingDuration: number;
+      editCount: number;
+      pasteCount: number;
+    } => {
+      const totalLength = content.length + headline.length;
+      
+      // Detect potential copy-paste patterns
+      const hasRunOnSentences = !content.includes('.') && !content.includes('!') && !content.includes('?');
+      const hasExcessiveSuperlatives = (content.toLowerCase().match(/amazing|incredible|perfect|best|worst|terrible|awful/g) || []).length > 3;
+      const hasGenericPhrases = (content.toLowerCase().match(/great product|highly recommend|five stars|fast shipping/g) || []).length > 1;
+      
+      let typingDuration: number;
+      let editCount: number;
+      let pasteCount: number;
+      
+      if (hasRunOnSentences || hasGenericPhrases) {
+        // Likely copy-pasted or bot-generated
+        typingDuration = Math.max(2, Math.floor(totalLength / 15)); // Very fast typing
+        editCount = Math.floor(Math.random() * 2); // Few edits
+        pasteCount = Math.floor(Math.random() * 3) + 1; // Some paste operations
+      } else if (hasExcessiveSuperlatives) {
+        // Potentially fake but manually typed
+        typingDuration = Math.max(5, Math.floor(totalLength / 8)); // Fast typing
+        editCount = Math.floor(Math.random() * 5) + 1;
+        pasteCount = Math.floor(Math.random() * 2);
+      } else {
+        // Likely authentic
+        typingDuration = Math.max(30, Math.floor(totalLength / 3) + Math.floor(Math.random() * 60)); // Normal typing
+        editCount = Math.floor(Math.random() * 10) + 2; // Normal editing
+        pasteCount = Math.floor(Math.random() * 2); // Minimal pasting
+      }
+      
+      return { typingDuration, editCount, pasteCount };
+    };
+
+    const accountAge = getAccountAge(review.userName, review.date);
+    const typingMetrics = getTypingMetrics(review.content, review.headline);
+
+    const mlRequest = {
+      rating: review.rating,
+      headline: review.headline,
+      review_text: review.content,
+      verified_purchase: review.verified,
+      account_age_days: accountAge,
+      typing_duration_seconds: typingMetrics.typingDuration,
+      edit_count: typingMetrics.editCount,
+      paste_count: typingMetrics.pasteCount,
+      review_length_chars: review.content.length,
+      contains_images: false,
+      previous_reviews_count: Math.floor(Math.random() * 20) + 1
+    };
+
+    console.log(`🤖 Analyzing review "${review.headline}" with ML service...`);
+    
+    const response = await fetch('http://localhost:8000/analyze/review', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(mlRequest),
+      timeout: 10000
+    });
+
+    if (response.ok) {
+      const analysis = await response.json();
+      console.log(`✅ ML analysis completed for "${review.headline}": ${analysis.authenticity_score}% authentic`);
+      
+      return {
+        authenticityScore: analysis.authenticity_score,
+        isFake: analysis.is_fake,
+        fakeReasons: analysis.fake_indicators || []
+      };
+    } else {
+      throw new Error(`ML service returned status ${response.status}`);
+    }
+  } catch (error) {
+    console.warn(`⚠️ ML service unavailable for review "${review.headline}", using fallback analysis:`, error);
+    
+    // Fallback analysis based on review characteristics
+    const content = review.content.toLowerCase();
+    const headline = review.headline.toLowerCase();
+    const userName = review.userName.toLowerCase();
+    
+    let authenticityScore = 100;
+    const fakeReasons: string[] = [];
+    
+    // Check for fake indicators
+    if (!review.verified && (review.rating === 1 || review.rating === 5)) {
+      authenticityScore -= 25;
+      fakeReasons.push('Extreme rating without verified purchase');
+    }
+    
+    if (userName.includes('_') && userName.includes('2024')) {
+      authenticityScore -= 20;
+      fakeReasons.push('Suspicious username pattern');
+    }
+    
+    if (userName.includes('master') || userName.includes('99')) {
+      authenticityScore -= 15;
+      fakeReasons.push('Generic username pattern');
+    }
+    
+    const superlatives = ['amazing', 'incredible', 'perfect', 'best ever', 'worst ever', 'terrible', 'awful'];
+    const superlativeCount = superlatives.filter(word => content.includes(word) || headline.includes(word)).length;
+    if (superlativeCount > 3) {
+      authenticityScore -= 15;
+      fakeReasons.push('Excessive use of superlatives');
+    }
+    
+    const genericPhrases = ['great product', 'highly recommend', 'five stars', 'fast shipping', 'great seller'];
+    const genericCount = genericPhrases.filter(phrase => content.includes(phrase)).length;
+    if (genericCount > 2) {
+      authenticityScore -= 10;
+      fakeReasons.push('Generic review pattern detected');
+    }
+    
+    if (!review.content.match(/[.!?]/)) {
+      authenticityScore -= 15;
+      fakeReasons.push('No punctuation usage');
+    }
+    
+    if (review.rating === 5 && review.content.length < 50) {
+      authenticityScore -= 8;
+      fakeReasons.push('Very short review for maximum rating');
+    }
+    
+    authenticityScore = Math.max(10, Math.min(100, authenticityScore));
+    
+    return {
+      authenticityScore,
+      isFake: authenticityScore < 60,
+      fakeReasons
+    };
+  }
+};
+
+// Function to get reviews with dynamic authenticity scoring
+export const getMockReviews = async (): Promise<Review[]> => {
+  console.log('🔄 Analyzing mock reviews with ML service...');
+  
+  const reviewsWithAuthenticity = await Promise.all(
+    mockReviewsBase.map(async (baseReview) => {
+      const { authenticityScore, isFake, fakeReasons } = await analyzeReviewAuthenticity(baseReview);
+      
+      return {
+        ...baseReview,
+        authenticityScore,
+        isFake,
+        fakeReasons
+      } as Review;
+    })
+  );
+  
+  console.log('✅ All mock reviews analyzed successfully');
+  return reviewsWithAuthenticity;
+};
+
+// Keep the original mockReviews export for backward compatibility, but it will be empty initially
+export let mockReviews: Review[] = [];
+
+// Initialize mock reviews with ML analysis
+export const initializeMockReviews = async (): Promise<Review[]> => {
+  if (mockReviews.length === 0) {
+    mockReviews = await getMockReviews();
+  }
+  return mockReviews;
+};
 
 export const mockTrustScore: TrustScore = {
   overall: 78,
