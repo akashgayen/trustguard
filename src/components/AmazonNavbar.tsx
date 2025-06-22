@@ -7,18 +7,18 @@ interface NavLink {
 }
 
 const navLinks: NavLink[] = [
-  { label: '🛡️ TrustGuardAssured', href: '/productlist' },
-  { label: 'Mobiles', href: '#' },
-  { label: 'MX Player', href: '#' },
-  { label: 'Sell', href: '#' },
-  { label: 'Amazon Pay', href: '#' },
-  { label: 'Gift Cards', href: '#' },
-  { label: 'AmazonBasics', href: '#' },
-  { label: 'Kindle eBooks', href: '#' },
-  { label: 'Books', href: '#' },
-  { label: 'Home Improvement', href: '#' },
-  { label: 'Gift Ideas', href: '#' },
-  { label: 'Health, Household & Personal Care', href: '#' },
+  { label: "🛡️ TrustGuardAssured", href: "/productlist" },
+  { label: "👈 Click this to view TrustGuarded products", href: "#" },
+  { label: "MX Player", href: "#" },
+  { label: "Sell", href: "#" },
+  { label: "Amazon Pay", href: "#" },
+  { label: "Gift Cards", href: "#" },
+  { label: "AmazonBasics", href: "#" },
+  { label: "Kindle eBooks", href: "#" },
+  { label: "Books", href: "#" },
+  { label: "Home Improvement", href: "#" },
+  { label: "Gift Ideas", href: "#" },
+  { label: "Health, Household & Personal Care", href: "#" },
 ];
 
 interface AmazonSidebarProps {
@@ -157,19 +157,22 @@ const AmazonNavbar: React.FC = () => {
   };
 
   return (
-    <> {/* Changed div to a Fragment */}
+    <>
+      {" "}
+      {/* Changed div to a Fragment */}
       {/* Header */}
       <header className="bg-gray-800 text-gray-100 p-2 flex items-center flex-wrap justify-between md:flex-nowrap">
         {/* Amazon Logo and Delivery */}
         <div className="flex items-center flex-shrink-0 mb-2 md:mb-0">
           <a href="#" className="flex items-center mr-4">
             <img
-              src="https://www.amazon.in/ref=nav_logo" // Placeholder for Amazon logo
+              src="https://imgs.search.brave.com/aRFwAtm5cC-BV_IQhjstO2yr-BC1_LEuynZZ5deYf8M/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly8xMDAw/bG9nb3MubmV0L3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDE2LzEw/L0FtYXpvbi1Mb2dv/LTUwMHgyODEuanBn" // Placeholder for Amazon logo
               alt="Amazon India"
               className="h-6 md:h-7 rounded-sm"
               onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
                 e.currentTarget.onerror = null;
-                e.currentTarget.src = "https://placehold.co/100x30/374151/FFFFFF?text=Amazon";
+                e.currentTarget.src =
+                  "https://placehold.co/100x30/374151/FFFFFF?text=Amazon";
               }}
             />
           </a>
@@ -221,9 +224,15 @@ const AmazonNavbar: React.FC = () => {
             {/* Language Dropdown (Placeholder) */}
             <div className="absolute top-full left-0 mt-2 w-32 bg-gray-700 text-gray-100 rounded-md shadow-lg hidden group-hover:block z-10">
               <ul className="py-1">
-                <li className="px-3 py-1 hover:bg-red-800 cursor-pointer rounded-sm">Hindi</li>
-                <li className="px-3 py-1 hover:bg-red-800 cursor-pointer rounded-sm">Bengali</li>
-                <li className="px-3 py-1 hover:bg-red-800 cursor-pointer rounded-sm">Marathi</li>
+                <li className="px-3 py-1 hover:bg-red-800 cursor-pointer rounded-sm">
+                  Hindi
+                </li>
+                <li className="px-3 py-1 hover:bg-red-800 cursor-pointer rounded-sm">
+                  Bengali
+                </li>
+                <li className="px-3 py-1 hover:bg-red-800 cursor-pointer rounded-sm">
+                  Marathi
+                </li>
               </ul>
             </div>
           </div>
@@ -237,28 +246,41 @@ const AmazonNavbar: React.FC = () => {
             {/* Account Dropdown (Placeholder) */}
             <div className="absolute top-full -right-4 mt-2 w-48 bg-gray-700 text-gray-100 rounded-md shadow-lg hidden group-hover:block z-10">
               <ul className="py-1">
-                <li className="px-3 py-1 hover:bg-red-800 cursor-pointer rounded-sm">Your Account</li>
-                <li className="px-3 py-1 hover:bg-red-800 cursor-pointer rounded-sm">Your Orders</li>
-                <li className="px-3 py-1 hover:bg-red-800 cursor-pointer rounded-sm">Your Wish List</li>
+                <li className="px-3 py-1 hover:bg-red-800 cursor-pointer rounded-sm">
+                  Your Account
+                </li>
+                <li className="px-3 py-1 hover:bg-red-800 cursor-pointer rounded-sm">
+                  Your Orders
+                </li>
+                <li className="px-3 py-1 hover:bg-red-800 cursor-pointer rounded-sm">
+                  Your Wish List
+                </li>
               </ul>
             </div>
           </div>
 
           {/* Returns & Orders */}
-          <a href="#" className="flex-col hidden lg:flex text-sm cursor-pointer hover:border hover:border-gray-600 rounded-sm p-1">
+          <a
+            href="#"
+            className="flex-col hidden lg:flex text-sm cursor-pointer hover:border hover:border-gray-600 rounded-sm p-1"
+          >
             <span className="text-xs">Returns</span>
             <span className="font-bold">& Orders</span>
           </a>
 
           {/* Cart */}
-          <a href="#" className="relative flex items-center text-sm cursor-pointer hover:border hover:border-gray-600 rounded-sm p-1">
+          <a
+            href="#"
+            className="relative flex items-center text-sm cursor-pointer hover:border hover:border-gray-600 rounded-sm p-1"
+          >
             <ShoppingCart size={24} className="mr-1" />
-            <span className="absolute -top-1 left-4 bg-orange-400 text-gray-900 text-xs font-bold px-1 rounded-full">0</span>
+            <span className="absolute -top-1 left-4 bg-orange-400 text-gray-900 text-xs font-bold px-1 rounded-full">
+              0
+            </span>
             Cart
           </a>
         </div>
       </header>
-
       {/* Navigation Bar */}
       <nav className="bg-gray-700 text-gray-100 p-2 flex items-center overflow-x-auto whitespace-nowrap scrollbar-hide text-sm">
         {/* All / Hamburger Menu - Trigger Sidebar */}
@@ -281,7 +303,6 @@ const AmazonNavbar: React.FC = () => {
           </a>
         ))}
       </nav>
-
       {/* Amazon Sidebar Component */}
       <AmazonSidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
     </>
