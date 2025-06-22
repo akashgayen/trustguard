@@ -200,8 +200,7 @@ export const analyzeReviewAuthenticity = async (review: Omit<Review, 'authentici
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(mlRequest),
-      timeout: 10000
+      body: JSON.stringify(mlRequest)
     });
 
     if (response.ok) {
