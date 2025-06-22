@@ -183,26 +183,6 @@ function ProductPage() {
       }
     } catch (error) {
       console.error('Failed to submit review:', error);
-      
-      // Fallback for demo
-      const newReview: Review = {
-        id: `review_${Date.now()}`,
-        productId: product.id,
-        userId: 'current_user',
-        userName: 'Current User',
-        userAvatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&dpr=2',
-        rating: reviewData.rating || 5,
-        headline: reviewData.headline || '',
-        content: reviewData.content || '',
-        date: new Date().toISOString(),
-        verified: true,
-        helpful: 0,
-        authenticityScore: Math.floor(Math.random() * 30) + 70,
-        isFake: false,
-        fakeReasons: []
-      };
-      
-      setReviews(prev => [newReview, ...prev]);
     }
   };
 
